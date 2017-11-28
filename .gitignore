@@ -1,0 +1,133 @@
+/config.json
+/cnf/local/*
+/services/*
+
+/apps/*/assets/package/build/
+/apps/*/assets/package/dist/
+
+#
+# node modules of various contained apps
+# we dont include anything that we dont need in production
+#
+npm-debug.log
+*.seed
+*.log
+*.dat
+*.out
+*.pid
+node_modules/**/lib-cov/
+node_modules/**/pids/
+node_modules/**/logs/
+node_modules/**/results/
+node_modules/**/spec/
+node_modules/**/spec-jasmine/
+node_modules/**/docs/
+node_modules/**/test/
+node_modules/**/tests/
+node_modules/**/example/
+node_modules/**/examples/
+node_modules/**/benchmark/
+node_modules/**/benchmarks/
+
+#
+# we sometimes need stuff shipped in node_module/build dirs
+# but we don't want to include anything that is an artifact of `npm rebuild`
+#
+node_modules/**/lib/binding/Release/
+node_modules/**/build/Makefile
+node_modules/**/build/Release/
+node_modules/**/build/deps/
+node_modules/**/build/binding.Makefile
+node_modules/**/build/config.gypi
+node_modules/**/build/gyp-mac-tool
+node_modules/**/build/*.target.mk
+
+dist/*
+cache/*
+
+#
+# some dev stuff
+#
+/dev/junk/*
+
+
+#
+# text editor cruft (e.g. Eclipse/Aptana or Sublime)?
+#
+.project
+.metadata
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+*.launch
+.buildpath
+/*.sublime-project
+*.sublime-workspace
+.cproject
+.externalToolBuilders/
+.idea/
+
+#
+# backup/tmp file cruft from other apps
+#
+*~.*
+
+
+# OSX Cruft
+#
+.DS_Store
+.DS_Store?
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+Icon
+Icon?
+ehthumbs.db
+Thumbs.db
+
+
+# Windows Cruft
+#
+Desktop.ini
+$RECYCLE.BIN/
+
+
+# Vagrant ignores
+.vagrant
+
+
+# SublimeText project files
+#
+*.sublime-workspace
+
+
+# Archive files ...
+# It's better to unpack these files and commit the raw source because
+# git has its own built in compression methods.
+#
+*.7z
+*.jar
+*.rar
+*.zip
+*.gz
+*.bzip
+*.bz2
+*.xz
+*.lzma
+*.iso
+*.tar
+*.dmg
+*.xpi
+*.gem
+*.egg
+*.deb
+*.rpm

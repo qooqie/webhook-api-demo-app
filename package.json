@@ -1,0 +1,31 @@
+{
+  "name": "webhook-api-demo-app",
+  "version": "1.0.0",
+  "description": "Demonstration application written in nodejs which demonstrates the usages of the qooqie webhooks system.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qooqie/webhook-api-demo-app.git"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "api",
+    "webhooks"
+  ],
+  "author": "Mark Horsman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/qooqie/webhook-api-demo-app/issues"
+  },
+  "homepage": "https://github.com/qooqie/webhook-api-demo-app#readme",
+
+  "dependencies": {
+    "body-parser": "1.18.2",
+    "express": "4.16.2",
+    "express-rate-limit": "^2.9.0"
+  }
+}

@@ -1,4 +1,5 @@
 const express       = require("express");
+const basicAuth     = require('express-basic-auth');
 const bodyParser    = require("body-parser");
 const rateLimit     = require('express-rate-limit');
 const crypto        = require('crypto');
@@ -11,12 +12,27 @@ const limiter       = new rateLimit({
     delayMs     : 0 // disable delaying - full speed until the max limit is reached
 });
 
+let requestsSinceStartup = 0;
+
+const user = process.env.USER || null;
+const pass = process.env.PASS || null;
+
+if (user && pass) {
+    app.use(basicAuth({
+        users: { [user]: pass },
+        unauthorizedResponse: 'No valid credentials provided'
+    }));
+}
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(limiter);
 
 const checkip = (req, res, next) => {
     // check incoming IP addr is white-listed
+    requestsSinceStartup++;
+
+    console.log('requests since startup: %s', requestsSinceStartup);
 
     next();
 };
@@ -41,7 +57,10 @@ const reply = (req, res) => {
     console.log(req.body);
     console.log('-----------------------------------');
 
-    res.sendStatus(200)
+    if (process.env.DELAY)
+        setTimeout(() => res.sendStatus(200), process.env.DELAY);
+    else
+        res.sendStatus(200);
 };
 
 app.post("/leads",      checkip, validate, reply);

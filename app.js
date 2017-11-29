@@ -1,13 +1,14 @@
 const express       = require("express");
 const bodyParser    = require("body-parser");
 const rateLimit     = require('express-rate-limit');
+const crypto        = require('crypto');
 
 const app           = express();
 
 const limiter       = new rateLimit({
-    windowMs: process.env.RATE_LIMIT_WINDOW * 1000 || 15*60*1000, // 15 minutes
-    max: process.env.RATE_LIMIT_MAX || 100, // limit each IP to x requests per windowMs
-    delayMs: 0 // disable delaying - full speed until the max limit is reached
+    windowMs    : process.env.RATE_LIMIT_WINDOW * 1000 || 15*60*1000, // 15 minutes
+    max         : process.env.RATE_LIMIT_MAX || 100, // limit each IP to x requests per windowMs
+    delayMs     : 0 // disable delaying - full speed until the max limit is reached
 });
 
 app.use(bodyParser.json());
@@ -21,14 +22,22 @@ const checkip = (req, res, next) => {
 };
 
 const validate = (req, res, next) => {
-    // validate 'X-Signature' header is given
-    // drop response if invalid?
+    if (process.env.SECRET) {
+        // get signature.
+        const retrievedSignature = req.headers["x-signature"];
+
+        // recalculate signature.
+        const computedSignature = crypto.createHmac("sha256", process.env.SECRET).update(JSON.stringify(req.body)).digest("hex");
+
+        // compare signatures.
+        if (computedSignature !== retrievedSignature)
+            return res.status(403).send('X-Signature validation failed.')
+    }
 
     next();
 };
 
 const reply = (req, res) => {
-    console.log('-----------------------------------');
     console.log(req.body);
     console.log('-----------------------------------');
 

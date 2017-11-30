@@ -3,14 +3,39 @@ const basicAuth     = require('express-basic-auth');
 const bodyParser    = require("body-parser");
 const rateLimit     = require('express-rate-limit');
 const crypto        = require('crypto');
+const moment        = require('moment');
 
 const app           = express();
 
-const limiter       = new rateLimit({
+const rateLimitOptions = {
     windowMs    : process.env.RATE_LIMIT_WINDOW * 1000 || 15*60*1000, // 15 minutes
     max         : process.env.RATE_LIMIT_MAX || 100, // limit each IP to x requests per windowMs
-    delayMs     : 0 // disable delaying - full speed until the max limit is reached
-});
+    delayMs     : 0, // disable delaying - full speed until the max limit is reached
+    headers     : true,
+    statusCode  : 429,
+    message     : 'Too many requests, please try again later.',
+    handler     : (req, res, next) => {
+        if (rateLimitOptions.headers) {
+            const ts = moment().add(Math.ceil(rateLimitOptions.windowMs / 1000), 'seconds');
+
+            // res.setHeader('X-RateLimit-Reset', ts);
+            // res.setHeader('Retry-After', ts);
+            res.setHeader('Retry-After', ts.toString());
+        }
+
+        res.format({
+            html: function(){
+                res.status(rateLimitOptions.statusCode).end(rateLimitOptions.message);
+            },
+            json: function(){
+                res.status(rateLimitOptions.statusCode).json({ message: rateLimitOptions.message });
+            }
+        });
+    }
+};
+
+
+const limiter = new rateLimit(rateLimitOptions);
 
 let requestsSinceStartup = 0;
 
